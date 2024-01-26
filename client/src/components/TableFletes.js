@@ -1,26 +1,53 @@
 import axios from "axios";
 import { useState } from "react";
 import ModalForm from "./ModalForm";
-import MesAnioFormulario from "./MesAnioFormulario";
+
 
 
 
 
 const TableFletes = () =>{
 const [fletesList, setFletesList]= useState([]);
-const [search, SetSearch]= useState({
-  anio:0,
-  mes:0
-});
+const [mes, setMes] = useState(1);
+  const [anio, setAnio] = useState(2020);
 
 
+
+
+  const validarMesYAnio = () => {
+    const mesValido = mes >= 1 && mes <= 12;
+    const anioValido = anio >= 2020; // Establece el año mínimo según tus necesidades
+
+    if (!mesValido) {
+      alert('Por favor, ingresa un mes válido (entre 1 y 12).');
+    }
+
+    if (!anioValido) {
+      alert('Por favor, ingresa un año válido (mayor o igual a 2020).');
+    }
+
+    return mesValido && anioValido;
+  };
 
 const getFletes=()=>{
 
-
-    axios.get("http://localhost:3001/fletes").then((response)=>{
+  if (validarMesYAnio()) {
+    console.log('Mes seleccionado:', mes);
+    console.log('Año seleccionado:', anio);
+ 
+    axios.get(`http://localhost:3001/fletes?mes=${mes}&anio=${anio}`)
+    .then(response => {
+      // Manejar la respuesta del servidor
+      console.log('Respuesta del servidor:', response.data);
+      // Aquí puedes actualizar tu estado de React u otra lógica de frontend
       setFletesList(response.data);
+    })
+    .catch(error => {
+      // Manejar errores en la solicitud
+      console.error('Error en la solicitud al servidor:', error);
     });
+  }
+  
   }
 
  
@@ -77,12 +104,40 @@ const total= ganancias+gastos;
 
 return (
 
-<div className='lista'>
+<div className=''>
   <div className="container-buttons-listar">
-      <MesAnioFormulario SetSearch={SetSearch}/>
-      <button id="btn-listar"  className="lista-btn-second" onClick={getFletes}>Listar Todo</button>
+      
+      <div className="form-container">
+      <label htmlFor="mes">Mes:</label>
+      <input
+        type="number"
+        id="mes"
+        name="mes"
+        value={mes}
+        min={1}
+        max={12}
+        onChange={(e) => setMes(parseInt(e.target.value, 10))}
+      />
+
+      <label htmlFor="anio">Año:</label>
+      <input
+        type="number"
+        id="anio"
+        name="anio"
+        value={anio}
+        min={2020}
+        onChange={(e) => setAnio(parseInt(e.target.value, 10))}
+      />
+
+
+
+      <button  id="btn-listar" type="button" onClick={getFletes}>
+        Obtener Datos
+      </button>
+    </div>
   </div>
-      <div className="expense-table-container">
+  <div className="lista">
+     <div className="expense-table-container">
       <table className="expense-table">
         <thead>
           <tr>
@@ -94,7 +149,7 @@ return (
           </tr>
         </thead>
         <tbody>
-          {fletesList.map((item, index) => (
+          {fletesList.filter(item => item.type.toLowerCase() === 'ingreso').map((item, index) => (
             <tr key={index}>
               <td>{item.type}</td>
               <td>{formatearFecha(item.date)}</td>
@@ -110,7 +165,39 @@ return (
           ))}
         </tbody>
       </table>
+    </div>
+    <div className="expense-table-container">
       <table className="expense-table">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Fecha</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {fletesList.filter(item => item.type.toLowerCase() === 'gasto').map((item, index) => (
+            <tr key={index}>
+              <td>{item.type}</td>
+              <td>{formatearFecha(item.date)}</td>
+              <td>{item.description}</td>
+              <td>{item.price}</td>
+              <td>
+              <div className="btn-group" role="group" aria-label="Basic example">
+              <ModalForm item={item} />
+                <button type="button" className="btn btn-danger" onClick={()=>{deleteFlete(item.id)}}>Eliminar</button>
+              </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      
+    </div>
+    </div>
+    <table className="expense-table">
         <thead>
         <tr>
             <th>Ganancia</th>
@@ -126,7 +213,6 @@ return (
             </tr>
           </tbody>
       </table>
-    </div>
     </div>
 )
 }

@@ -22,7 +22,6 @@ margin: auto;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   
- 
 }
 
 .form-group {
@@ -78,31 +77,8 @@ button:hover {
 }
 /*-------------------------------*/
 
-.expense-table-container {
-  width: 80%;
-  margin: 20px auto;
-  color: #f2f2f2;
-  font-weight: 400;
-  font-size: 25px;
-}
 
-.expense-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
 
-.expense-table th, .expense-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-  
-}
-
-.expense-table th {
-  background-color: #f2f2f2;
-  color: #080707;
-}
 
 .links{
   padding-left: 30px !important;
@@ -150,7 +126,6 @@ button:hover {
   justify-content: space-evenly;
   align-items: center;
   margin-top: 20px;
-  background-color: black;
 }
 
 
@@ -195,4 +170,74 @@ button:hover {
   align-items: center;
   gap: 10px;
 
+}
+
+/*---------------------------*/
+
+
+
+/* Estilos generales */
+
+
+.lista {
+  display: flex;
+  justify-content: space-around; /* Para separar las tablas */
+  margin-top: 20px;
+  font-weight: 600;
+  
+}
+
+.expense-table-container {
+  width: 48%; /* Ajusta según sea necesario para dejar espacio entre las tablas */
+  box-sizing: border-box;
+}
+
+.expense-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.expense-table th, .expense-table td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.expense-table th {
+  background-color: #f2f2f2;
+}
+
+/* Estilos para los botones de acción */
+.btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #ffffff;
+}
+
+/* Estilos para la tabla de resumen */
+.expense-summary-table {
+  width: 50%;
+  margin-top: 20px;
+}
+
+.expense-summary-table th, .expense-summary-table td {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+.expense-summary-table th {
+  background-color: #f2f2f2;
 }
