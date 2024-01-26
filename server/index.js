@@ -47,18 +47,26 @@ app.post("/create",(req,res)=>{
 });
 
 
-app.get("/fletes",(req,res)=>{
-
-    db.query("SELECT *, DATE_FORMAT(date, '%Y-%m-%d') FROM flete" ,
-    (err,result)=>{
-        if(err){
-            console.log(err);
-        }else{
-            res.send(result);
-        }
+app.get("/fletes", (req, res) => {
+    const { mes, anio } = req.query;
+  
+    // Validar que se proporcionen mes y año
+    if (!mes || !anio) {
+      return res.status(400).json({ error: 'Por favor, proporciona mes y año.' });
     }
-    );
-});
+  
+    // Construir y ejecutar la consulta SQL con parámetros
+    const consulta = `SELECT *, DATE_FORMAT(date, '%Y-%m-%d') AS formattedDate FROM flete WHERE MONTH(date) = ? AND YEAR(date) = ?`;
+  
+    db.query(consulta, [mes, anio], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Error en la consulta SQL.' });
+      }
+  
+      res.send(result);
+    });
+  });
 
 
 app.put("/update",(req,res)=>{
